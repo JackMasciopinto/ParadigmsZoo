@@ -1,4 +1,4 @@
-public abstract class Mammal {
+public abstract class Mammal extends Animal{
     protected String trick;
     Mammal(int a, String n){
         super(a,n);
@@ -8,7 +8,7 @@ public abstract class Mammal {
         super(a,n,f);
         this.repoMethod = "babies";
     }    
-    public abstract String getTrick();
-    public abstract void setTrick(String t) { this.trick = t; }
+    public String getTrick() { return this.trick; }
+    public void setTrick(String t) { this.trick = t; }
     
-    
+}   
