@@ -10,5 +10,5 @@ public abstract class Mammal extends Animal{
     }    
     public String getTrick() { return this.trick; }
     public void setTrick(String t) { this.trick = t; }
-    
+	public abstract void display();    
 }   
