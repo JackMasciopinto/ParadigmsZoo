@@ -1,48 +1,199 @@
+import java.util.*;
 public class ZooTest { 
-	public static void setupAnimals(){
-	    //TODO
-		int numAnimals = 6;
-		Animal[] alist = new Animal[2];
-		alist[0] = new Otter(4,"Gidget");
-		alist[1] = new Otter(2,"Olivia","salmon");
-		/*alist[2] = new Shark("Jawsy");
-		alist[3] = new Dog("Fido", “Black”, 1);
-		alist[3].setAge(10);
-		alist[4] = new Whale("Shamu");
-		alist[5] = new Dog("Bagheera");*/
-		System.out.println("\n");
-		//printSummaryView(alist);
-		printVerboseList(alist);
-	}
 	
-	static Animal[] addAnimal(Animal a, Animal[] alist){
+	static void initCounts(HashMap<String,Integer> counts){
+		counts.put("otter",0);
+		counts.put("gorilla",0);
+		counts.put("hawk",0);
+		counts.put("eagle",0);
+		counts.put("lizard",0);
+		counts.put("alligator",0);
+		int tot = 0;
+	}
+	public static ArrayList<Animal> setupAnimals(HashMap<String,Integer> counts){
+	    //TODO
+		ArrayList<Animal> alist = new ArrayList<Animal>();
+		alist.add(new Otter(4,"Gidget"));
+		alist.add(new Otter(2,"Olivia","salmon"));
+		alist.add(new Gorilla(2,"George","apples"));
+		counts.put("otter",2);
+		return alist;
+	}
+	static Animal makeAnimal(int age, String species, String name){
+		Animal a = new Otter(0,"","");
+		switch(species){
+			case "otter":
+				Otter o =  new Otter(age,name);
+				o.info();
+				a = o;
+				break;
+			case "gorilla":
+				Gorilla g =  new Gorilla(age,name);
+				g.info();
+				a = g;
+				break;
+		/*	case "lizard":
+				return Lizard(age,name);
+			case "alligator":
+				return alligator(age,name);
+			case "hawk":
+				return hawk(age,name);
+			case "eagle":
+				return eagle(age,name); */
+		}
+		return a;
+	}
+	static Animal makeAnimal(int age, String species, String name, String food){
+		Animal a = new Otter(0,"","");
+		switch(species){
+			case "otter":
+				Otter o =  new Otter(age,name,food);
+				o.info();
+				a = o;
+				break;
+			case "gorilla":
+				Gorilla g =  new Gorilla(age,name,food);
+				g.info();
+				a = g;
+				break;
+		/*	case "lizard":
+				return Lizard(age,name,food);
+			case "alligator":
+				return alligator(age,name,food);
+			case "hawk":
+				return hawk(age,name,food);
+			case "eagle":
+				return eagle(age,name,food);
+		*/
+		}
+		return a;
+	}
+	static void addAnimal(String[] details, ArrayList<Animal> alist, HashMap<String,Integer> counts){
+		int age = 0;
+		String food = "";
+		String species = details[0];
+		String name = details[1];
+		Animal a;
+		if(details.length > 2){
+			age = Integer.parseInt(details[2]);
+		}
+		if(details.length > 3){
+			food = details[3];
+			a = makeAnimal(age,species,name,food);
+		} else {
+			a = makeAnimal(age,species,name);
+		
+		}	
 		alist.add(a);
+		String word = a.getSpecies();
+		int count = counts.containsKey(word) ? counts.get(word) : 0;
+		counts.put(word, count + 1);
 	}
-	static Animal[] deleteAnimal(int index, Animal[] alist){
-		alist.remove(index);
-	}
-	static void displayAnimals(String name, Animal[] alist) {
+	static void removeAnimal(String name, ArrayList<Animal> alist, HashMap<String,Integer> counts){
+		int i = 0;
+		String word;
+		boolean flag = true;
 		for(Animal a: alist){
 			if(a.getName().equals(name)){
+				word = a.getSpecies();
+				System.out.println(name + " the " + word + " was removed from the zoo \n");
+				alist.remove(new Integer(i));
+				i -= 1;
+				int count = counts.containsKey(word) ? counts.get(word) : 0;
+				counts.put(word, count - 1);
+				flag = false;
+			}
+			i++;
+		}
+		if(flag){
+			System.out.println("Could not find animal " + name + "\n");
+		}
+	}
+	static void displayAnimals(String name, ArrayList<Animal> alist) {
+		int curr = 1;
+		boolean flag = true;
+		for(Animal a: alist){
+			if(a.getName().equals(name)){
+				flag = false;
 				a.display();
 			}
 		}
-	}
-
-	static void printSummaryView(Animal[] alist){
-	}
-	static void printVerboseList(Animal[] alist){
-		for(Animal a: alist){
-			a.display();
-			System.out.println("");
+		if(flag){
+			System.out.println("Could not find animal " + name + "\n");
 		}
 	}
 
-	//static String printOptions(){ … }
+	static void printSummaryView(HashMap<String,Integer> counts){
+		System.out.println("Summary:");
+		for(String an : counts.keySet()){
+			int count = counts.get(an);
+			if(count > 0){
+				System.out.println(count + " " + an + "(s)");	
+			}
+		}
+		System.out.println("\n");
+	}
+	static void printVerboseList(ArrayList<Animal> alist){
+		int count = 1;
+		System.out.println("Verbose List of Animals with details:");
+		System.out.println("\tName\tSpecies");
+		for(Animal a: alist){
+			System.out.println(count + ": " + a.toString());
+			count += 1;
+		}
+		System.out.println("\n");
+	}
+
+	static String printOptions(){
+		return "Options:\nAdd animal(add)\nDelete animal(delete)\nDisplay Animal(display)";
+	}
 
 	public static void main(String[]args) {
 		  //TODO	
-		  setupAnimals();
+		Scanner scan = new Scanner(System.in);
+		
+		HashMap<String,Integer> counts = new HashMap<String,Integer>();
+		initCounts(counts);
+		ArrayList<Animal> alist = setupAnimals(counts);
+		printSummaryView(counts);
+		printVerboseList(alist);
+		String action = "";
+		String details = "";
+		while(true){
+			System.out.println("Type exit at any time to exit the program");
+			System.out.println(printOptions());
+			System.out.print("\nSelect action: ");
+			action = scan.nextLine();
+			if(action.equals("add")){
+				System.out.print("\nWhat animal would you like to add to the zoo ");
+				details = scan.nextLine();
+				String[] splitStr = details.trim().split("\\s+");
+				System.out.println("");
+				addAnimal(splitStr,alist, counts);
+			}
+			else if(action.equals("delete")){
+				System.out.print("\nWhat animal would you like to remove from the zoo ");
+				details = scan.nextLine();
+				System.out.println("");
+				removeAnimal(details,alist, counts);
+			}
+			else if(action.equals("display")){
+				System.out.print("\nWhat animal would you like to display from the zoo ");
+				details = scan.nextLine();
+				System.out.println("");
+				displayAnimals(details,alist);
+			}
+			else if(action.equals("verbose")){
+				printVerboseList(alist);
+			}
+			else if(action.equals("exit")){
+				break;
+			}
+			else {
+				System.out.println("Invalid action");
+			}
+		}
+		
 	} // end of main function
 }	
 			
