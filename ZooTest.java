@@ -32,14 +32,26 @@ public class ZooTest {
 				g.info();
 				a = g;
 				break;
-		/*	case "lizard":
-				return Lizard(age,name);
+			case "lizard":
+				Lizard l = new Lizard(age,name);
+				l.info();
+				a = l;
+				break;
 			case "alligator":
-				return alligator(age,name);
+				Alligator al = new Alligator(age,name);
+				al.info();
+				a = al;
+				break;
 			case "hawk":
-				return hawk(age,name);
+				Hawk h = new Hawk(age, name);
+				h.info();
+				a = h;
+				break;
 			case "eagle":
-				return eagle(age,name); */
+				Eagle e = new Eagle(age,name);
+				e.info();
+				a = e;
+				break;
 		}
 		return a;
 	}
@@ -56,15 +68,26 @@ public class ZooTest {
 				g.info();
 				a = g;
 				break;
-		/*	case "lizard":
-				return Lizard(age,name,food);
+			case "lizard":
+				Lizard l = new Lizard(age,name,food);
+				l.info();
+				a = l;
+				break;
 			case "alligator":
-				return alligator(age,name,food);
+				Alligator al = new Alligator(age,name,food);
+				al.info();
+				a = al;
+				break;
 			case "hawk":
-				return hawk(age,name,food);
+				Hawk h = new Hawk(age, name, food);
+				h.info();
+				a = h;
+				break;
 			case "eagle":
-				return eagle(age,name,food);
-		*/
+				Eagle e = new Eagle(age,name, food);
+				e.info();
+				a = e;
+				break;
 		}
 		return a;
 	}
@@ -168,6 +191,10 @@ public class ZooTest {
 				System.out.print("\nWhat animal would you like to add to the zoo ");
 				details = scan.nextLine();
 				String[] splitStr = details.trim().split("\\s+");
+				if(splitStr.length < 2){
+					System.out.println("Not enough args");
+					continue;
+				}
 				System.out.println("");
 				addAnimal(splitStr,alist, counts);
 			}
